@@ -34,14 +34,17 @@ public class Funcionario extends Pessoa{
 	}
 	
 	//Método para adicionar dependente
-	public void adicionarDependente(Dependente dependete) throws DependenteException {
+	public void adicionarDependente(Dependente dependente) throws DependenteException {
 		//validação de CPF duplicado
-		for (Dependente dependente : dependentes) {
+		for (Dependente d : dependentes) {
 			//comparando o CPF do dependente atual com o CPF do novo dependente
-			if(dependente.getCpf().equals(dependente.getCpf())) {
-				throw new DependenteException("CPF já cadastrado!");
-			}this.dependentes.add(dependente);
+			if(d.getCpf().equals(dependente.getCpf())) {
+				throw new DependenteException("\nCPF de dependente já cadastrado!");
+				
+			}
 		}
+		//Passando na validação, adiciona o novo dependente
+		this.dependentes.add(dependente);
 	}
 		
 	
