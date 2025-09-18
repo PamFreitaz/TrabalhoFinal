@@ -2,6 +2,8 @@ package empresa;
 
 import java.time.LocalDate;
 
+import entity.Funcionario;
+
 public class FolhaPagamento {
 	
 	private int codigo;

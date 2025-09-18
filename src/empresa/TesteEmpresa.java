@@ -1,6 +1,11 @@
+
+//Eu fiz main só para testar
 package empresa;
 
 import java.time.LocalDate;
+
+import entity.Dependente;
+import entity.Funcionario;
 
 public class TesteEmpresa {
 
@@ -19,12 +24,12 @@ public class TesteEmpresa {
 			Dependente dependente3 = new Dependente("Theo", "333", LocalDate.of(2020,9,26), Parentesco.FILHO);
 			
 
-			funcionario1.adicionarDependente(dependente1);
-			funcionario2.adicionarDependente(dependente2);
-			funcionario1.adicionarDependente(dependente3);
+//			funcionario1.adicionarDependente(dependente1);
+//			funcionario2.adicionarDependente(dependente2);
+//			funcionario1.adicionarDependente(dependente3);
 		
 		} catch (DependenteException e) {
-			System.out.println("Erro ao adicionar um dependete!" + e.getMessage());
+			System.out.println("Erro ao adicionar um dependente!" + e.getMessage());
 			e.printStackTrace();
 		}
 	}

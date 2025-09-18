@@ -1,6 +1,10 @@
-package empresa;
+package entity;
 
 import java.time.LocalDate;
+
+import empresa.DependenteException;
+import empresa.Parentesco;
+import empresa.Pessoa;
 
 public class Dependente extends Pessoa {
 	
