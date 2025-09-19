@@ -13,14 +13,11 @@ public class FolhaPagamento {
 	private double descontoIR;
 	private double salarioLiquido;
 	
-	//criei aqui para usar o incremento em que cada Folha de pagamento tenho um código único
-	public static int proximoCodFuncionario = 0;
-
+	
 	public FolhaPagamento(int codigo, Funcionario funcionario, LocalDate dataPagamento, double descontoINSS,
 			double descontoIR, double salarioLiquido) {
 		super();
-		//incremento no código do funcionário
-		this.codigo = proximoCodFuncionario++;
+		
 		this.funcionario = funcionario;
 		this.dataPagamento = dataPagamento;
 		this.descontoINSS = descontoINSS;
@@ -89,16 +86,5 @@ public class FolhaPagamento {
 	public void setSalarioLiquido(double salarioLiquido) {
 		this.salarioLiquido = salarioLiquido;
 	}
-
-	public static int getProximoCodFuncionario() {
-		return proximoCodFuncionario;
-	}
-
-	public static void setProximoCodFuncionario(int proximoCodFuncionario) {
-		FolhaPagamento.proximoCodFuncionario = proximoCodFuncionario;
-	}
-	
-	
-	
-	
 }
+	
