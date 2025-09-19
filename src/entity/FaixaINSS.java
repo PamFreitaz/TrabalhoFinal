@@ -1,4 +1,4 @@
-package empresa;
+package entity;
 
 public enum FaixaINSS {
     FAIXA1(1518.00, 0.075, 0.00),   //até 1518.00, alq 7.5%, sem desconto

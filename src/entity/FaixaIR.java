@@ -1,4 +1,4 @@
-package empresa;
+package entity;
 
 public enum FaixaIR {
     FAIXA1(2259.00, 0.0,   0.00),   //até 2259.00 tem isenção do desconto, ent~ao tudo zerado

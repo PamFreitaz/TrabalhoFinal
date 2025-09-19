@@ -9,12 +9,10 @@ public abstract class Pessoa {
 	
 	
 	public Pessoa(String nome, String cpf, LocalDate dataNascimento) {
-		super();
 		this.nome = nome;
 		this.cpf = cpf;
 		this.dataNascimento = dataNascimento;
 	}
-
 
 	@Override
 	public String toString() {
@@ -49,6 +47,12 @@ public abstract class Pessoa {
 
 	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
+	}
+
+
+	public double calcularSalarioLiquido() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	
