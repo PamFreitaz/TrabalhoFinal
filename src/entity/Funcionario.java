@@ -14,44 +14,50 @@ public class Funcionario extends Pessoa implements Calculadora {
 	private double descontoIr;
 	private ArrayList<Dependente> dependentes;
 
-	public Funcionario(String nome, String cpf, LocalDate dataNascimento, double salarioBruto) {
-		super(nome, cpf, dataNascimento);
+	public Funcionario(String nome, String cpf, LocalDate dataNascimento, int id, double salarioBruto) {
+		super(nome, cpf, dataNascimento, id);
 		this.salarioBruto = salarioBruto;
-		this.dependentes = new ArrayList<>();
+	}
 
+	// YURI FEZ ESSA PARTE DO CALCULO
+
+	@Override
+	public String toString() {
+		return "Funcionario [salarioBruto=" + salarioBruto + ", descontoInss=" + descontoInss + ", descontoIr="
+				+ descontoIr + ", dependentes=" + dependentes + "]";
 	}
 
 	public double getSalarioBruto() {
 		return salarioBruto;
 	}
 
+	public void setSalarioBruto(double salarioBruto) {
+		this.salarioBruto = salarioBruto;
+	}
+
 	public double getDescontoInss() {
 		return descontoInss;
+	}
+
+	public void setDescontoInss(double descontoInss) {
+		this.descontoInss = descontoInss;
 	}
 
 	public double getDescontoIr() {
 		return descontoIr;
 	}
 
+	public void setDescontoIr(double descontoIr) {
+		this.descontoIr = descontoIr;
+	}
+
 	public ArrayList<Dependente> getDependentes() {
 		return dependentes;
 	}
 
-	// Método para adicionar dependente
-//	public void adicionarDependente(Dependente dependente) throws DependenteException {
-//		// validação de CPF duplicado
-//		for (Dependente d : dependentes) {
-//			// comparando o CPF do dependente atual com o CPF do novo dependente
-//			if (d.getCpf().equals(dependente.getCpf())) {
-//				throw new DependenteException("\nCPF de dependente já cadastrado!");
-//
-//			}
-//		}
-//		// Passando na validação, adiciona o novo dependente
-//		this.dependentes.add(dependente);
-//	}
-
-	// YURI FEZ ESSA PARTE DO CALCULO
+	public void setDependentes(ArrayList<Dependente> dependentes) {
+		this.dependentes = dependentes;
+	}
 
 	@Override
 	public double calcularINSS() {
@@ -94,4 +100,3 @@ public class Funcionario extends Pessoa implements Calculadora {
 		return salarioBruto - calcularIR(calcularINSS());
 	}
 }
-
