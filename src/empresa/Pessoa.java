@@ -17,7 +17,15 @@ public abstract class Pessoa {
 		this.id = id;
 	}
 
-	@Override
+	  public Pessoa(String nome, String cpf, LocalDate dataNascimento) {
+	        super();
+	        this.nome = nome;
+	        this.cpf = cpf;
+	        this.dataNascimento = dataNascimento;
+	        this.id = 0; //construtor pra gerar o csv
+	  }
+	
+	  @Override
 	public String toString() {
 		return "Nome:" + nome + ", cpf:" + cpf + ", data Nascimento:" + dataNascimento + "id:" + id;
 	}

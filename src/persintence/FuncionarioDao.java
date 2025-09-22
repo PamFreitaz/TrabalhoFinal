@@ -4,102 +4,108 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement; 
 import java.util.ArrayList;
 import java.util.List;
+
 import conexao.ConnectionFactory;
 import entity.Funcionario;
 
 public class FuncionarioDao {
 
-	// variável para a conexao com banco
-	private Connection connection;
 
-	public FuncionarioDao() {
-		connection = new ConnectionFactory().getConnection();
-	}
+    // Inserir funcionário e retornar o ID gerado
+    public int inserir(Funcionario funcionario) {
+    	String sqlFuncionario = "INSERT INTO funcionario (nome, cpf, data_nascimento, salario_bruto) VALUES (?, ?, ?, ?)";
+    	// PreparedStatement para que os recursos sejam fechados igual o Roni fez na
+    	// aula 11
 
-	// inserindo os funcionario
-	public void inserir(Funcionario funcionario) {
+    	 try (Connection connection = new ConnectionFactory().getConnection();
+                 PreparedStatement stmt = connection.prepareStatement(sqlFuncionario, Statement.RETURN_GENERATED_KEYS)) {
 
-		// Insert para um novo funcionario na tabela do banco de dados
-		String sqlFuncionario = "insert into funcionario (nome, cpf, dataNascimento, salarioBruto) VALUES (?, ?, ?, ?)";
+                stmt.setString(1, funcionario.getNome());
+                stmt.setString(2, funcionario.getCpf());
+                stmt.setDate(3, java.sql.Date.valueOf(funcionario.getDataNascimento()));
+                stmt.setDouble(4, funcionario.getSalarioBruto());
 
-		try {
-			// PreparedStatement, para que os recursos sejam fechados igual o Roni fez na
-			// aula 11
+                int affected = stmt.executeUpdate();
+                if (affected == 0) {
+                    throw new SQLException("Inserção falhou, nenhuma linha afetada.");
+                }
 
-			PreparedStatement stmtFuncionario = connection.prepareStatement(sqlFuncionario);
+                // pega o id gerado pelo banco e grava no objeto
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int idGerado = rs.getInt(1);
+                        funcionario.setId(idGerado);
+                        return idGerado;
+                    }
+                }
 
-			// Valores para o comando SQL do funcionário
-			stmtFuncionario.setString(1, funcionario.getNome());
-			stmtFuncionario.setString(2, funcionario.getCpf());
-			// tive que fazer conversão de Localdate para date linguagem SQL
-			stmtFuncionario.setDate(3, java.sql.Date.valueOf(funcionario.getDataNascimento()));
-			stmtFuncionario.setDouble(4, funcionario.getSalarioBruto());
+            } catch (SQLException e) {
+                System.err.println("Problemas ao gravar funcionario: " + e.getMessage());
+            }
 
-			// executar o comando SQL
-			stmtFuncionario.execute();
-			stmtFuncionario.close();
-			connection.close();
+            return -1;
+        }
 
-		} catch (SQLException e) {
-			System.out.println("Problemas ao gravar registro!");
-		}
-	}
-
+    // NÃO FOI PRECISO ESSA PARTE PARA O TRABALHO FINAL
+    
+    
 	// Para atualizar um funcionario
-	public void atualizar(Funcionario funcionario) {
-		String sql = "Update funcionario SET nome=?, cpf=?, dataNascimento=?, salarioBruto=?, WHERE cpf=?";
-		try {
-			PreparedStatement stmt = connection.prepareStatement(sql);
-			stmt.setString(1, funcionario.getNome());
-			stmt.setString(2, funcionario.getCpf());
-			stmt.setDate(3, java.sql.Date.valueOf(funcionario.getDataNascimento()));
-			stmt.setDouble(4, funcionario.getSalarioBruto());
-			stmt.setString(5, funcionario.getCpf());
+    public void atualizar(Funcionario funcionario) {
+    	String sql = "UPDATE funcionario SET nome=?, cpf=?, data_nascimento=?, salario_bruto=? WHERE id=?";
+        try (Connection connection = new ConnectionFactory().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-			stmt.execute();
-			stmt.close();
-			connection.close();
+            stmt.setString(1, funcionario.getNome());
+            stmt.setString(2, funcionario.getCpf());
+            stmt.setDate(3, java.sql.Date.valueOf(funcionario.getDataNascimento()));
+            stmt.setDouble(4, funcionario.getSalarioBruto());
+            stmt.setInt(5, funcionario.getId());
 
-		} catch (SQLException e) {
-			System.out.println("Problemas ao gravar!");
-		}
-	}
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Problemas ao atualizar! " + e.getMessage());
+        }
+    }
 
-	public void apagar(int id) {
-		String sql = "delete from cliente where id=?";
-		try {
-			PreparedStatement stmt = connection.prepareStatement(sql);
-			stmt.setInt(1, id);
-			stmt.execute();
-			stmt.close();
-			connection.close();
-		} catch (SQLException e) {
-			System.out.println("Problemas ao apagar registro!");
-			e.printStackTrace();
-		}
-	}
+    //apagar funcionario
+    public void apagar(int id) {
+        String sql = "DELETE FROM funcionario WHERE id=?";
+        try (Connection connection = new ConnectionFactory().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-	public List<Funcionario> listar() {
-		String sql = "select * from funcionario";
-		List<Funcionario> funcionario = new ArrayList<>();
-		try {
-			PreparedStatement stmt = connection.prepareStatement(sql);
-			ResultSet rs = stmt.executeQuery();
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
 
-			while (rs.next()) {
-				funcionario.add(new Funcionario(rs.getString("nome"), rs.getString("cpf"),
-						rs.getDate("dataNascimento").toLocalDate(), rs.getInt("funcionario_id"),
-						rs.getDouble("salarioBruto")));
-			}
-			stmt.close();
-			connection.close();
+        } catch (SQLException e) {
+            System.out.println("Problemas ao apagar registro! " + e.getMessage());
+        }
+    }
 
-		} catch (SQLException e) {
-			System.out.println("Problemas ao listar registros!");
-			e.printStackTrace();
-		}
-		return funcionario;
-	}
+    // Listar todos funcionários
+    public List<Funcionario> listar() {
+        String sql = "SELECT * FROM funcionario";
+        List<Funcionario> funcionarios = new ArrayList<>();
+
+        try (Connection connection = new ConnectionFactory().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                funcionarios.add(new Funcionario(
+                        rs.getString("nome"),
+                        rs.getString("cpf"),
+                        rs.getDate("data_nascimento").toLocalDate(),
+                        rs.getInt("id"),
+                        rs.getDouble("salario_bruto")
+                ));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Problemas ao listar registros! " + e.getMessage());
+        }
+        return funcionarios;
+    }
 }

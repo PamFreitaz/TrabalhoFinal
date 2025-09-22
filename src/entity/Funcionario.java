@@ -15,12 +15,19 @@ public class Funcionario extends Pessoa implements Calculadora {
 	private ArrayList<Dependente> dependentes;
 
 	public Funcionario(String nome, String cpf, LocalDate dataNascimento, int id, double salarioBruto) {
-		super(nome, cpf, dataNascimento, id);
-		this.salarioBruto = salarioBruto;
+	    super(nome, cpf, dataNascimento, id);
+	    this.salarioBruto = salarioBruto;
+	    this.dependentes = new ArrayList<>(); // garante que não fique vazio
 	}
 
-	// YURI FEZ ESSA PARTE DO CALCULO
+	//  construtor sem id para leitura do arquivo csv
+	public Funcionario(String nome, String cpf, LocalDate dataNascimento, double salarioBruto) {
+	    super(nome, cpf, dataNascimento); // chama o construtor novo de Pessoa sem o id
+	    this.salarioBruto = salarioBruto;
+	    this.dependentes = new ArrayList<>();
+	}
 
+	
 	@Override
 	public String toString() {
 		return "Funcionario [salarioBruto=" + salarioBruto + ", descontoInss=" + descontoInss + ", descontoIr="

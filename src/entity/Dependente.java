@@ -10,15 +10,25 @@ public class Dependente extends Pessoa {
 
 	private Parentesco parentesco;
 
-	public Dependente(String nome, String cpf, LocalDate dataNascimento, int id, Parentesco parentesco)throws DependenteException{
+	public Dependente(String nome, String cpf, LocalDate dataNascimento, int id, Parentesco parentesco) throws DependenteException {
 		super(nome, cpf, dataNascimento, id);
 		this.parentesco = parentesco;
 		if(LocalDate.now().minusYears(18).isBefore(dataNascimento)) {
 		}else {
-			throw new DependenteException("Dependente tem que ser menor de 18 anos!");
-		}
+			throw new DependenteException("Dependente tem que ser menor de 18 anos!");		
 	}
-
+	}
+	//construtor sem id pra gerar o csv
+	public Dependente(String nome, String cpf, LocalDate dataNascimento, Parentesco parentesco) throws DependenteException {
+	    super(nome, cpf, dataNascimento); // usa o construtor de Pessoa sem id
+	    this.parentesco = parentesco;
+	    if (LocalDate.now().minusYears(18).isBefore(dataNascimento)) {
+	    } else {
+	        throw new DependenteException("Dependente tem que ser menor de 18 anos!");        
+	    }
+	}
+	
+	
 	public Parentesco getParentesco() {
 		return parentesco;
 	}

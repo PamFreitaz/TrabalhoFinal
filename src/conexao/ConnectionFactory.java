@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConnectionFactory {
 	
-	private String url = "gondola.proxy.rlwy.net";
+	private String url = "jdbc:postgresql://gondola.proxy.rlwy.net:34293/railway";
 	private String usuario = "postgres";
 	private String senha = "qOBKRgQvSXGVfyRCOKNAnoPGgUqPqnXv";
 	private Connection connection;
