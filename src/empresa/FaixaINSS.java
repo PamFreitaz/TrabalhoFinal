@@ -1,3 +1,4 @@
+
 package empresa;
 
 public enum FaixaINSS {
