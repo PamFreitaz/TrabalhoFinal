@@ -6,21 +6,20 @@ import java.sql.SQLException;
 
 public class ConnectionFactory {
     
-    private String url = "jdbc:postgresql://gondola.proxy.rlwy.net:34293/railway";
-    private String usuario = "postgres";
-    private String senha = "qOBKRgQvSXGVfyRCOKNAnoPGgUqPqnXv";
-    private Connection connection;
+    private static String url = "jdbc:postgresql://gondola.proxy.rlwy.net:34293/railway";
+    private static String usuario = "postgres";
+    private static String senha = "qOBKRgQvSXGVfyRCOKNAnoPGgUqPqnXv";    
+    private static Connection connection;
     
-    public Connection getConnection() {
-        System.out.println("Conectando ao banco de dados...");
-        
-        try {
-            connection = DriverManager.getConnection(url, usuario, senha);
-            if (connection != null) {
+    public static Connection getConnection() {
+        if (connection == null) { // conecta uma vez no banco de dados
+            try {
+                System.out.println("Conectando ao Banco de Dados...");
+                connection = DriverManager.getConnection(url, usuario, senha);
                 System.out.println("Conectado com sucesso!");
+            } catch (SQLException e) {
+                System.err.println("Não foi possível conectar: " + e.getMessage());
             }
-        } catch (SQLException e) {
-            System.out.println("Não foi possível conectar: " + e.getMessage());
         }
         return connection;
     }

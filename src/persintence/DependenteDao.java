@@ -10,12 +10,16 @@ import entity.Funcionario;
 
 public class DependenteDao {
 
+	private final Connection connection;
+
+    public DependenteDao() {
+        this.connection = new ConnectionFactory().getConnection(); // usa a conexão de ConnectionFactory
+    }	
     public void inserir(Dependente dependente, Funcionario funcionario) {
         String sql = "INSERT INTO dependente (nome, cpf, data_nascimento, parentesco, funcionario_id) " +
                      "VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection connection = new ConnectionFactory().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, dependente.getNome());
             stmt.setString(2, dependente.getCpf());

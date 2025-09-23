@@ -35,8 +35,6 @@ public class LeituraGravacaoArquivo {
             Scanner sc2 = new Scanner(file);
             Set<Funcionario> funcionarios = new HashSet<>();
             Funcionario ultimoFuncionario = null;  //guarda o ultimo funcionario lido pra quando vier o dependente ele saber que o dependente pertence ao ultimoFuncionario lido.
-            
-
             /*
              ***********************  ADICIONADO PARA REJEIÇÃO  **************  hugo fez
              */
@@ -45,15 +43,19 @@ public class LeituraGravacaoArquivo {
             
             /****************************************************************/
 
-            while (sc2.hasNext()){
-                String linha = sc2.nextLine();
-                if (!linha.isEmpty()) {
+            FuncionarioDao funcionarioDao = new FuncionarioDao();
+            DependenteDao dependenteDao = new DependenteDao();
+            FolhaPagamentoDao folhaDao = new FolhaPagamentoDao();
+                        
+            while (sc2.hasNext()){  //enquanto ainda tiver linha
+                String linha = sc2.nextLine(); //le a proxima linha
+                if (!linha.isEmpty()) { //se a linha ta vazia: ignora 
 
-                    String[] dados = linha.split(";");
+                    String[] dados = linha.split(";");   //separa a linha do arquivo toda vez q tem o ";"
                     String cpf = dados[1]; // posição 1 sempre é CPF
 
                     /*
-                     ***********************  VERIFICA DUPLICADO ********************
+                     ***********************  VERIFICA DUPLICADO ******************** //Hugo fez essa parte
                      */
                     if (!cpfsUsados.add(cpf)) {
                         linhasRejeitadas.add(linha); // linha rejeitada
@@ -71,11 +73,8 @@ public class LeituraGravacaoArquivo {
                                 salario);
                         funcionarios.add(f);      
                         ultimoFuncionario = f;
-                        
-                        FuncionarioDao funcionarioDao = new FuncionarioDao();
-                        funcionarioDao.inserir(f);  // insere no banco e gera o ID do funcionario
-                        
-                      
+                        funcionarioDao.inserir(f); //Aqui insere o funcionario no banco de dados
+                                              
                     } catch (NumberFormatException e) { 
                     	//Se ele nao achar um double(salario no dados[3]) da linha do arquivo de entrada, o codigo vai entender que aquela pessoa é um dependente.
                         if (ultimoFuncionario != null) {
@@ -89,10 +88,7 @@ public class LeituraGravacaoArquivo {
                                     LocalDate.parse(dados[2]),
                                     parentesco);								// parentesco e nao o double salario
                                 	ultimoFuncionario.getDependentes().add(d);  // adiciona o dependente dentor do ultimo funcionario lido.
-
-                                	DependenteDao dependenteDao = new DependenteDao();
-                                	dependenteDao.inserir(d, ultimoFuncionario); //insere os dependentes no banco
-                                	
+                                	dependenteDao.inserir(d, ultimoFuncionario); //adiciona no banco de dados o dependente correspondente ao ultimo funcionario 
                                 	
                             } catch (IllegalArgumentException e1) { // se o valueOf falhou o parentesco ta invalido
                                 System.err.println("Parentesco inválido no arquivo: '" + dados[3] + "'");
@@ -128,7 +124,6 @@ public class LeituraGravacaoArquivo {
                         );
                 }System.out.println("");
         
-                FolhaPagamentoDao folhaDao = new FolhaPagamentoDao();
 
                 empresa.FolhaPagamento folha = new empresa.FolhaPagamento(0, f,
                     LocalDate.now(), 
@@ -137,12 +132,10 @@ public class LeituraGravacaoArquivo {
                     f.calcularSalarioLiquido()
                 );
 
-                folhaDao.inserir(folha, f);
+                folhaDao.inserir(folha, f); // insere os calculos da folha no banco.
                 System.out.println("Folha de pagamento inserida para o funcionário: " + f.getNome());
-                												// insere no banco
-             folhaDao.inserir(folha, f);
-
-            
+                												
+                      
             }
             
             //GRAVAÇÃO DO ARQUIVO
