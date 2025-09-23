@@ -3,17 +3,18 @@ package persintence;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 import conexao.ConnectionFactory;
 import empresa.FolhaPagamento;
 import entity.Funcionario;
 
 public class FolhaPagamentoDao {
+    
+	 private final Connection connection;
 
-    private Connection connection;
-
-    public FolhaPagamentoDao() {
-        connection = new ConnectionFactory().getConnection();
-    }
+	    public FolhaPagamentoDao() {	        
+	        this.connection = ConnectionFactory.getConnection();// usa a conexão de ConnectionFactory 
+	    }
 
     public void inserir(FolhaPagamento folha, Funcionario funcionario) {
         String sql = "INSERT INTO folha_pagamento (funcionario_id, data_pagamento, desconto_inss, desconto_ir, salario_liquido) VALUES (?, ?, ?, ?, ?)";
